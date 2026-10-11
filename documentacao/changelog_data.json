@@ -154,5 +154,17 @@
       "Documentação: seção 6 (pendências) atualizada — a exportação de despesas deixou de ser uma das telas com tratamento de erro genérico",
       "Ainda não testado rodando de verdade neste ambiente (sem Flutter instalado aqui) — recomenda-se testar a exportação com uma despesa cuja descrição tenha emoji ou acentos antes da apresentação, e, se o erro genérico ainda aparecer (agora com detalhe), investigar a causa real (ex.: bucket/política 'fotos' no Supabase) a partir da mensagem"
     ]
+  },
+  {
+    "versao": "11",
+    "data": "11/10/2026",
+    "titulo": "Link de acesso do app mais curto — repositório renomeado no GitHub Pages",
+    "resumo": "O usuário pediu um link de acesso mais bonito que o padrão do GitHub Pages (https://viajaaibolso-design.github.io/viaja-ai-bolso/). Avaliamos três caminhos: domínio próprio registrado (pago ou via GitHub Student Pack), deploy em outro host gratuito com subdomínio escolhido (Netlify/Vercel/Cloudflare Pages), ou encurtar o link atual renomeando o repositório no GitHub. O usuário escolheu a opção gratuita e mais rápida: renomear o repositório para exatamente 'viajaaibolso-design.github.io' (nome da organização), que faz o GitHub Pages passar a servir o site na raiz do domínio, sem o sufixo '/viaja-ai-bolso/'. O usuário fez a renomeação pelo site do GitHub (ação exclusiva de dono/admin do repositório). Também foi avaliada e descartada a opção de renomear a própria organização do GitHub (que removeria o 'aa' duplicado do nome): é uma ação de maior risco (nome antigo fica livre para registro por terceiros, pacotes/imagens mudam de endereço, sem garantia de redirecionamento do link do GitHub Pages) para corrigir apenas uma letra, então não foi feita.",
+    "mudancas": [
+      "Repositório no GitHub renomeado de 'viaja-ai-bolso' para 'viajaaibolso-design.github.io' (ação feita pelo usuário no site do GitHub).",
+      "Link de acesso ao app mudou de https://viajaaibolso-design.github.io/viaja-ai-bolso/ para https://viajaaibolso-design.github.io/.",
+      "Ajustado .github/workflows/deploy.yml: o parâmetro --base-href do build Flutter Web mudou de '/viaja-ai-bolso/' para '/', para que os caminhos dos arquivos estáticos (JS, CSS, assets) do app continuem corretos no novo endereço raiz.",
+      "Sem mudança de código Dart, banco de dados ou Edge Functions — mudança restrita à infraestrutura de deploy (CI/CD do GitHub Actions)."
+    ]
   }
 ]

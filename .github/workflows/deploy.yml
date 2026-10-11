@@ -33,7 +33,7 @@ jobs:
         run: flutter pub get
 
       - name: Build da versão web
-        run: flutter build web --release --base-href /viaja-ai-bolso/
+        run: flutter build web --release --base-href /
 
       - name: Preparar artefato do GitHub Pages
         uses: actions/upload-pages-artifact@v3

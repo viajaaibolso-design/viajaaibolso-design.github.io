@@ -212,10 +212,11 @@ body(
     "<b>Atualização (v3):</b> a cada atualização enviada ao repositório, o GitHub Actions gera "
     "automaticamente a versão web do app e publica no GitHub Pages, gerando um link direto para "
     "acesso pelo navegador, sem necessidade de instalar nada — útil para demonstração na banca "
-    "(ver seção 7, versão 3):"
+    "(ver seção 7, versão 3). <b>Atualização (v11):</b> o repositório foi renomeado para que o "
+    "link ficasse mais curto, sem o sufixo com o nome do projeto (ver seção 7, versão 11):"
 )
 bullets([
-    "<font face='Courier'>https://viajaaibolso-design.github.io/viaja-ai-bolso/</font>",
+    "<font face='Courier'>https://viajaaibolso-design.github.io/</font>",
 ])
 
 story.append(PageBreak())
@@ -551,6 +552,11 @@ bullets([
     "início do arquivo, pra também evitar acentos errados ao abrir no Excel do Windows. A mensagem de "
     "erro da exportação, que antes era sempre genérica (\"Erro ao gerar exportação\", sem detalhe "
     "nenhum), agora mostra o motivo real devolvido pelo Supabase — ver seção 7, versão 10.",
+    "<b>Resolvido na v11:</b> o link de acesso ao app (seção 1.3) ficou mais curto — o repositório no "
+    "GitHub foi renomeado para <font face='Courier'>viajaaibolso-design.github.io</font>, o que faz o "
+    "GitHub Pages servir o site direto na raiz, sem o sufixo <font face='Courier'>/viaja-ai-bolso/</font>. "
+    "Mudança restrita à infraestrutura de deploy, sem alteração de código Dart, banco ou Edge Functions "
+    "— ver seção 7, versão 11.",
     "<b>Pendente de validação com o orientador:</b> dentro do Agente de vIAgens completo (RF33–RF47), "
     "só falta a orientação sobre documentação e vacinas — ainda depende de validação com o orientador "
     "(e, se possível, com usuários reais) antes de ser implementada, conforme o próprio levantamento de "
