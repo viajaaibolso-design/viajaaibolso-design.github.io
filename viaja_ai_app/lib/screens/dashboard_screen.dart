@@ -25,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double? _valorConvertido;
   bool _convertendo = false;
   bool _erroConversao = false;
+  bool _mostrarSaldoReal = false;
 
   @override
   void initState() {
@@ -247,28 +248,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ],
                                   ),
-                                  Stack(
-                                    alignment: Alignment.center,
+                                  Column(
                                     children: [
-                                      SizedBox(
-                                        width: 70,
-                                        height: 70,
-                                        child: CircularProgressIndicator(
-                                          value: ((viagem['percentual_gasto'] ??
-                                                      0) /
-                                                  100)
-                                              .clamp(0.0, 1.0),
-                                          backgroundColor:
-                                              Colors.white24,
-                                          color: Colors.white,
-                                          strokeWidth: 6,
+                                      GestureDetector(
+                                        onTap: () => setState(() =>
+                                            _mostrarSaldoReal =
+                                                !_mostrarSaldoReal),
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 70,
+                                              height: 70,
+                                              child: CircularProgressIndicator(
+                                                value: ((viagem[
+                                                                'percentual_gasto'] ??
+                                                            0) /
+                                                        100)
+                                                    .clamp(0.0, 1.0),
+                                                backgroundColor:
+                                                    Colors.white24,
+                                                color: Colors.white,
+                                                strokeWidth: 6,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 4),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  _mostrarSaldoReal
+                                                      ? formatarMoeda(
+                                                          ((viagem['orcamento'] ??
+                                                                      0) -
+                                                                  (viagem['total_gasto'] ??
+                                                                      0))
+                                                              .toDouble(),
+                                                          moedaLocal)
+                                                      : '${viagem['percentual_gasto'] ?? 0}%',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
+                                      const SizedBox(height: 4),
                                       Text(
-                                        '${viagem['percentual_gasto'] ?? 0}%',
+                                        _mostrarSaldoReal
+                                            ? 'toque p/ %'
+                                            : 'toque p/ saldo',
                                         style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                            color: Colors.white54,
+                                            fontSize: 9),
                                       ),
                                     ],
                                   ),

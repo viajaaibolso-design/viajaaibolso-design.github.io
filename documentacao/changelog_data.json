@@ -166,5 +166,17 @@
       "Ajustado .github/workflows/deploy.yml: o parâmetro --base-href do build Flutter Web mudou de '/viaja-ai-bolso/' para '/', para que os caminhos dos arquivos estáticos (JS, CSS, assets) do app continuem corretos no novo endereço raiz.",
       "Sem mudança de código Dart, banco de dados ou Edge Functions — mudança restrita à infraestrutura de deploy (CI/CD do GitHub Actions)."
     ]
+  },
+  {
+    "versao": "12",
+    "data": "20/10/2026",
+    "titulo": "Dashboard — toque no indicador de percentual revela o saldo real restante",
+    "resumo": "O usuário pediu uma forma rápida de ver, na tela inicial, quanto dinheiro ainda resta do orçamento da viagem, sem precisar abrir a lista de despesas. O indicador circular de percentual gasto (card 'Resumo da sua viagem') passou a ser tocável: ao tocar nele, o texto no centro do círculo alterna entre o percentual gasto ('X%') e o saldo real restante, calculado como orçamento menos total gasto e formatado na moeda local da viagem (mesma função formatarMoeda já usada no resto do app). Um rótulo pequeno abaixo do círculo ('toque p/ saldo' / 'toque p/ %') indica a interação disponível, já que não havia nenhum indicador visual de que o elemento era clicável antes dessa mudança.",
+    "mudancas": [
+      "lib/screens/dashboard_screen.dart: indicador circular de percentual envolvido por um GestureDetector; estado _mostrarSaldoReal (bool) adicionado a _DashboardScreenState para controlar o que é exibido.",
+      "Texto central do indicador agora alterna, a cada toque, entre '${percentual}%' e o saldo restante (orçamento - total_gasto) formatado com formatarMoeda(), dentro de um FittedBox para evitar que o valor em moeda (mais longo que o percentual) estoure o espaço do círculo de 70x70.",
+      "Rótulo de apoio 'toque p/ saldo' / 'toque p/ %' adicionado abaixo do círculo, em fonte pequena (9px, branco translúcido), só para indicar a interação — não altera o layout geral do card.",
+      "Sem mudança de banco de dados, Edge Functions ou outras telas — alteração restrita à DashboardScreen (apenas UI/estado local)."
+    ]
   }
 ]

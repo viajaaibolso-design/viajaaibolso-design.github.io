@@ -427,9 +427,12 @@ screens = [
      "Viagens, Despesas, Agente (v5/v6) e Perfil."),
     ("DashboardScreen", "Tela inicial pós-login: saudação personalizada, resumo da viagem ativa — manual "
      "ou automática (RF14, v4) — na moeda local da viagem, com indicador circular de progresso (fica "
-     "terracota quando o orçamento estoura), valor convertido para a moeda padrão do usuário com "
-     "seletor de moeda e horário da cotação (RF52/RF53, v4), gastos do dia, maior gasto e lista das "
-     "despesas mais recentes com botão \"Ver todas\" agora funcional (RF28, v4). Suporta pull-to-refresh."),
+     "terracota quando o orçamento estoura); tocar no indicador alterna entre mostrar o percentual "
+     "gasto e o saldo real restante (orçamento menos total gasto, já formatado na moeda da viagem), "
+     "com um rótulo \"toque p/ saldo\"/\"toque p/ %\" indicando a ação disponível (v12). Mostra também "
+     "valor convertido para a moeda padrão do usuário com seletor de moeda e horário da cotação "
+     "(RF52/RF53, v4), gastos do dia, maior gasto e lista das despesas mais recentes com botão "
+     "\"Ver todas\" agora funcional (RF28, v4). Suporta pull-to-refresh."),
     ("ViagensScreen", "Lista todas as viagens cadastradas em cards (foto, nome, destino, datas, "
      "progresso do orçamento), com opções de editar e excluir cada viagem, marcar/desmarcar como "
      "viagem ativa do dashboard (ícone de estrela, RF14, v4), e botão para cadastrar uma nova."),
