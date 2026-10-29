@@ -507,7 +507,11 @@ class _ItemDespesa extends StatelessWidget {
     switch (icone) {
       case 'restaurant': return Icons.restaurant;
       case 'directions_car': return Icons.directions_car;
+      case 'hotel': return Icons.hotel;
       case 'attractions': return Icons.attractions;
+      case 'shopping_bag': return Icons.shopping_bag;
+      case 'medical_services': return Icons.medical_services;
+      case 'category': return Icons.category;
       case 'card_giftcard': return Icons.card_giftcard;
       default: return Icons.more_horiz;
     }

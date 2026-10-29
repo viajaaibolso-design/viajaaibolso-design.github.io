@@ -331,7 +331,7 @@ make_table(
         ["DespesaService.listar(idViagem)", "tabela despesas (+ join categorias)", "Lista despesas de uma viagem"],
         ["DespesaService.listarCategorias()", "tabela categorias", "Lista categorias disponíveis"],
         ["DespesaService.cadastrar / atualizar / remover", "tabela despesas", "CRUD de despesas (agora inclui foto_url)"],
-        ["DashboardService.getDashboard(idUsuario)", "consultas combinadas", "Monta viagem ativa (manual ou automática, v4), gastos de hoje, maior gasto e últimas despesas"],
+        ["DashboardService.getDashboard(idUsuario)", "consultas combinadas", "Monta viagem ativa (manual ou automática, v4), gastos de hoje, maior gasto e últimas despesas; as 5 consultas rodam em paralelo com Future.wait em vez de uma atrás da outra (v13)"],
         ["StorageService.upload(...)", "Storage (bucket fotos)", "Upload genérico (fotos de perfil/viagem, comprovantes e exportações CSV)"],
     ],
     [5.8 * cm, 4.7 * cm, 5 * cm],

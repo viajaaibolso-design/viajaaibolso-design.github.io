@@ -129,23 +129,52 @@ class DashboardService {
     // viagem_ativa_id) ainda não tiver sido aplicada no banco, o resto do
     // dashboard continua funcionando normalmente (cai no fallback
     // automático por data, como antes da v4).
-    String? viagemAtivaId;
-    try {
-      final perfil = await _client
-          .from('profiles')
-          .select('viagem_ativa_id')
-          .eq('id', idUsuario)
-          .single();
-      viagemAtivaId = perfil['viagem_ativa_id'] as String?;
-    } catch (_) {
-      viagemAtivaId = null;
+    Future<Map<String, dynamic>?> buscarPerfil() async {
+      try {
+        return await _client
+            .from('profiles')
+            .select('viagem_ativa_id')
+            .eq('id', idUsuario)
+            .single();
+      } catch (_) {
+        return null;
+      }
     }
 
-    final viagens = await _client
-        .from('viagens_resumo')
-        .select()
-        .eq('user_id', idUsuario)
-        .order('data_inicio', ascending: false);
+    // As 5 consultas abaixo não dependem uma da outra, então disparamos
+    // todas de uma vez com Future.wait em vez de uma atrás da outra: o
+    // tempo de carregamento do dashboard passa a ser o da consulta mais
+    // lenta, não a soma de todas — é essa tela que recarrega sempre que o
+    // usuário volta ao Início (por exemplo, depois de cadastrar uma
+    // viagem nova), então o ganho é sentido ali.
+    final resultados = await Future.wait([
+      buscarPerfil(),
+      _client
+          .from('viagens_resumo')
+          .select()
+          .eq('user_id', idUsuario)
+          .order('data_inicio', ascending: false),
+      // RLS já restringe as despesas às viagens do usuário logado, então
+      // não é preciso filtrar por usuário aqui de novo.
+      _client.from('despesas').select('valor').eq('data', hojeStr),
+      _client
+          .from('despesas')
+          .select('valor, categorias(nome)')
+          .order('valor', ascending: false)
+          .limit(1),
+      _client
+          .from('despesas')
+          .select('descricao, valor, data, hora, categorias(nome, icone)')
+          .order('created_at', ascending: false)
+          .limit(5),
+    ]);
+
+    final perfil = resultados[0] as Map<String, dynamic>?;
+    final viagemAtivaId = perfil?['viagem_ativa_id'] as String?;
+    final viagens = resultados[1] as List;
+    final despesasHoje = resultados[2] as List;
+    final maiores = resultados[3] as List;
+    final ultimas = resultados[4] as List;
 
     Map<String, dynamic>? viagemAtiva;
 
@@ -172,22 +201,11 @@ class DashboardService {
     }
     viagemAtiva ??= viagens.isNotEmpty ? viagens.first as Map<String, dynamic> : null;
 
-    // RLS já restringe as despesas às viagens do usuário logado, então
-    // não é preciso filtrar por usuário aqui de novo.
-    final despesasHoje = await _client
-        .from('despesas')
-        .select('valor')
-        .eq('data', hojeStr);
     double totalHoje = 0;
     for (final d in despesasHoje) {
       totalHoje += (d['valor'] as num).toDouble();
     }
 
-    final maiores = await _client
-        .from('despesas')
-        .select('valor, categorias(nome)')
-        .order('valor', ascending: false)
-        .limit(1);
     Map<String, dynamic>? maiorGasto;
     if (maiores.isNotEmpty) {
       final m = maiores.first as Map<String, dynamic>;
@@ -195,12 +213,7 @@ class DashboardService {
       maiorGasto = {'valor': m['valor'], 'categoria': cat?['nome']};
     }
 
-    final ultimas = await _client
-        .from('despesas')
-        .select('descricao, valor, data, hora, categorias(nome, icone)')
-        .order('created_at', ascending: false)
-        .limit(5);
-    final ultimasFormatadas = (ultimas as List).map((e) {
+    final ultimasFormatadas = ultimas.map((e) {
       final d = e as Map<String, dynamic>;
       final cat = d['categorias'] as Map<String, dynamic>?;
       return {

@@ -178,5 +178,16 @@
       "Rótulo de apoio 'toque p/ saldo' / 'toque p/ %' adicionado abaixo do círculo, em fonte pequena (9px, branco translúcido), só para indicar a interação — não altera o layout geral do card.",
       "Sem mudança de banco de dados, Edge Functions ou outras telas — alteração restrita à DashboardScreen (apenas UI/estado local)."
     ]
+  },
+  {
+    "versao": "13",
+    "data": "29/10/2026",
+    "titulo": "Ícones de categoria incompletos + otimização do carregamento do dashboard",
+    "resumo": "Duas melhorias pedidas pelo usuário após a apresentação do pré-projeto. Primeiro, um bug visual: a tabela categorias no banco tem 7 categorias (Alimentação, Transporte, Hospedagem, Lazer, Compras, Saúde, Outros), mas a função que traduz o nome do ícone salvo no banco para um ícone do Flutter só reconhecia 4 delas — Hospedagem, Compras e Saúde caíam no ícone genérico de reticências (more_horiz) tanto na lista de despesas quanto no resumo do dashboard, em vez de mostrar um ícone correspondente à categoria. Segundo, uma otimização de desempenho: o usuário notou que, ao cadastrar uma viagem nova e voltar para a tela inicial, o carregamento demorava muito — a causa era o DashboardService.getDashboard() fazer 5 consultas ao banco uma atrás da outra (sequenciais), sendo que nenhuma delas depende do resultado das outras.",
+    "mudancas": [
+      "lib/screens/despesas_screen.dart e lib/screens/dashboard_screen.dart: função _iconeCategoria() ganhou os casos 'hotel' (Icons.hotel), 'shopping_bag' (Icons.shopping_bag), 'medical_services' (Icons.medical_services) e 'category' (Icons.category), cobrindo agora as 7 categorias cadastradas no banco (antes só 4 tinham ícone próprio).",
+      "lib/services/viagem_service.dart: DashboardService.getDashboard() reescrito para disparar as 5 consultas (perfil/viagem ativa, resumo das viagens, gastos de hoje, maior gasto, últimas despesas) de uma vez com Future.wait, em vez de uma await atrás da outra — o tempo de carregamento passa a ser o da consulta mais lenta, não a soma de todas. A tolerância a falha da consulta de perfil (caso a migração v4 ainda não tenha sido aplicada no banco) foi preservada, isolada numa função interna com try/catch.",
+      "Sem mudança de schema do banco, Edge Functions ou comportamento visível além da correção dos ícones — o resultado retornado pelo dashboard continua no mesmo formato de antes."
+    ]
   }
 ]
