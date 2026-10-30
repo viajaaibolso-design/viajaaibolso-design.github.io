@@ -189,5 +189,15 @@
       "lib/services/viagem_service.dart: DashboardService.getDashboard() reescrito para disparar as 5 consultas (perfil/viagem ativa, resumo das viagens, gastos de hoje, maior gasto, últimas despesas) de uma vez com Future.wait, em vez de uma await atrás da outra — o tempo de carregamento passa a ser o da consulta mais lenta, não a soma de todas. A tolerância a falha da consulta de perfil (caso a migração v4 ainda não tenha sido aplicada no banco) foi preservada, isolada numa função interna com try/catch.",
       "Sem mudança de schema do banco, Edge Functions ou comportamento visível além da correção dos ícones — o resultado retornado pelo dashboard continua no mesmo formato de antes."
     ]
+  },
+  {
+    "versao": "14",
+    "data": "30/10/2026",
+    "titulo": "Agente de vIAgens — roteiro ficava carregando para sempre sem erro",
+    "resumo": "O usuário reportou que, ao pedir pra IA gerar um roteiro de viagem (entrevista de planejamento), a tela ficava carregando indefinidamente, sem nunca mostrar erro nem resposta. Investigamos o fluxo completo (ChatService -> Edge Function chat-ia -> API do Gemini) e descartamos a hipótese de nome de modelo inválido (confirmado por pesquisa: o modelo configurado, gemini-3.5-flash, não foi desativado pela Google, só passou a redirecionar automaticamente para gemini-3.6-flash). A causa real é que nenhuma chamada à Edge Function tinha um limite de tempo no lado do app: se o servidor demorasse mais que o normal (cold start da function, lentidão pontual da API do Gemini, etc.), o Flutter ficava esperando a resposta sem nenhum prazo, deixando o indicador de carregamento preso na tela em vez de mostrar um erro que o usuário pudesse entender e tentar de novo.",
+    "mudancas": [
+      "lib/services/chat_service.dart: ChatService.enviarMensagem() (chat comum) e ChatService.planejarViagem() (roteiro) agora usam .timeout(...) na chamada à Edge Function chat-ia — 45s para o chat comum, 60s para o roteiro (que pede uma resposta mais longa da IA). Ao estourar o prazo, lança uma mensagem de erro específica em vez de deixar a Future pendente para sempre; a tela de chat já tinha tratamento de erro (SnackBar) pronto pra esse caso, então nenhuma mudança foi necessária em chat_screen.dart.",
+      "Nenhuma mudança na Edge Function chat-ia nem no modelo de IA configurado (GEMINI_MODEL) — o problema era só a falta de prazo no lado do cliente. Se a demora persistir mesmo com o timeout mostrando o erro, o próximo passo é olhar os logs da Edge Function no painel do Supabase para ver se é lentidão pontual da API do Gemini ou algo recorrente."
+    ]
   }
 ]

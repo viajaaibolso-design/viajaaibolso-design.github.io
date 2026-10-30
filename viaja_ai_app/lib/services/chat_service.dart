@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/mensagem_chat.dart';
 
@@ -90,7 +92,16 @@ class ChatService {
       if (contextoViagem != null) 'contextoViagem': contextoViagem,
     };
 
-    final res = await _client.functions.invoke('chat-ia', body: corpo);
+    // Sem timeout aqui, uma falha de rede ou lentidão no servidor deixava
+    // o app esperando pra sempre, com o indicador de "digitando" preso na
+    // tela — o usuário via isso como "trava e não faz nada". Agora, depois
+    // de 45s sem resposta, cai no catch do chamador com uma mensagem
+    // explicando o que houve, em vez de ficar carregando indefinidamente.
+    final res = await _client.functions.invoke('chat-ia', body: corpo).timeout(
+      const Duration(seconds: 45),
+      onTimeout: () => throw Exception(
+          'O assistente está demorando demais para responder. Tente novamente em instantes.'),
+    );
 
     if (res.status != 200 || res.data == null || res.data['resposta'] == null) {
       final erro = (res.data is Map && res.data['erro'] != null)
@@ -155,7 +166,15 @@ class ChatService {
       ],
     };
 
-    final res = await _client.functions.invoke('chat-ia', body: corpo);
+    // Mesmo motivo do timeout em enviarMensagem() acima, com um limite um
+    // pouco maior (60s) porque o roteiro pede uma resposta bem mais longa
+    // da IA (maxOutputTokens maior na Edge Function) e naturalmente demora
+    // mais que uma pergunta de chat comum.
+    final res = await _client.functions.invoke('chat-ia', body: corpo).timeout(
+      const Duration(seconds: 60),
+      onTimeout: () => throw Exception(
+          'Gerar o roteiro está demorando demais. Tente novamente em instantes.'),
+    );
 
     if (res.status != 200 || res.data == null || res.data['resposta'] == null) {
       final erro = (res.data is Map && res.data['erro'] != null)

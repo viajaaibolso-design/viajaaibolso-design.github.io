@@ -379,8 +379,8 @@ make_table(
     [
         ["ChatService.obterOuCriarConversa()", "tabela conversas", "Recupera a conversa mais recente do usuário ou cria uma nova"],
         ["ChatService.listarMensagens(...)", "tabela mensagens", "Carrega o histórico salvo ao abrir a tela"],
-        ["ChatService.enviarMensagem(...)", "tabela mensagens + Edge Function chat-ia (modo chat)", "Salva a pergunta, aciona a Edge Function com o histórico e o contexto da viagem ativa, e salva a resposta"],
-        ["ChatService.planejarViagem(...) (v9)", "tabela mensagens + Edge Function chat-ia (modo roteiro)", "Salva o resumo da entrevista de planejamento como pergunta, aciona a Edge Function pedindo um roteiro, e salva a resposta"],
+        ["ChatService.enviarMensagem(...)", "tabela mensagens + Edge Function chat-ia (modo chat)", "Salva a pergunta, aciona a Edge Function com o histórico e o contexto da viagem ativa, e salva a resposta. Timeout de 45s (v14)."],
+        ["ChatService.planejarViagem(...) (v9)", "tabela mensagens + Edge Function chat-ia (modo roteiro)", "Salva o resumo da entrevista de planejamento como pergunta, aciona a Edge Function pedindo um roteiro, e salva a resposta. Timeout de 60s (v14)."],
         ["Edge Function chat-ia (Deno)", "API do Gemini (Google AI Studio)", "Único ponto do sistema que guarda a chave da API; monta o prompt (modo chat ou roteiro) e devolve a resposta gerada"],
     ],
     [5.8 * cm, 4.7 * cm, 5 * cm],
